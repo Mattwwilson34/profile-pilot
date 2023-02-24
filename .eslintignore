@@ -23,5 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# Firebase
-firebase
+# Config files
+vite.config.ts
+vite-env.d.ts
+jest-setup.ts
