@@ -1,0 +1,26 @@
+name: Run formatting, linting, and testing on pushes to non-main branches
+'on':
+  push:
+    branches:
+      - '*'
+      - '!main'
+
+jobs:
+  test_build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Format code
+        run: npm run format
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Test code
+        run: npm run test
