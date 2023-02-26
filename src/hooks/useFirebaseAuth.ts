@@ -1,8 +1,8 @@
+import type { User } from '../types/User';
 import * as React from 'react';
 import { FirebaseAuthContext } from '../context/FireBaseAuthContext';
-import type firebase from 'firebase/auth';
 
-const useFirebaseAuth = (): firebase.User | undefined | null => {
+const useFirebaseAuth = (): User | undefined | null => {
   const context = React.useContext(FirebaseAuthContext);
   if (context === undefined) {
     throw new Error(

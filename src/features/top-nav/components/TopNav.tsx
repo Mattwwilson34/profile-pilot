@@ -1,6 +1,6 @@
 import * as React from 'react';
-import type firebase from 'firebase/auth';
 import { signOutOfFirebase } from '../../../firebase/firebase-auth';
+import type { User } from '../../../types/User';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
 interface TopNavProps {
-  user: firebase.User | null | undefined;
+  user: User | null | undefined;
 }
 
 const TopNav = ({ user }: TopNavProps): JSX.Element => {
