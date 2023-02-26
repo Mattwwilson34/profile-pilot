@@ -4,6 +4,7 @@ module.exports = {
   moduleNameMapper: {
     '\\.(css|less)$': 'identity-obj-proxy',
   },
+  testPathIgnorePatterns: ['/node_modules/', '/mockData/'],
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.d.ts'],
   coverageDirectory: 'coverage',
@@ -21,5 +22,7 @@ module.exports = {
     'main.tsx',
     'index.ts',
     '/firebase/',
+    '/__tests__/mockData/',
+    '/types/',
   ],
 };
