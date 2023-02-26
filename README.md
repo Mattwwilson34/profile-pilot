@@ -5,7 +5,7 @@ display a username, profile photo, and answers to a questionaire that user fille
 
 ## Features
 
-- [ ] Allow users to login with a third-party service like Google, Facebook, Twitter, etc.
+- [x] Allow users to login with a third-party service like Google, Facebook, Twitter, etc.
 - [ ] Presents user with questionaire of at least 3 questions at signup. Questions can be anything the developer would like.
 - [ ] Allow users to share a public URL that displays the user's username, profile photo, and their answers to the questionaire
 
