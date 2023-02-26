@@ -6,17 +6,18 @@ import {
 } from '../../context/FireBaseAuthContext';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import { BrowserRouter } from 'react-router-dom';
-import { type User } from '@firebase/auth';
+import { type User } from '../../types/User';
+import { user } from '../mockData/mockUser';
 
 beforeEach(() => {
   jest.spyOn(console, 'error');
-  console.error.mockImplementation(() => {
+  (console.error as jest.Mock).mockImplementation(() => {
     return 'error';
   });
 });
 
 afterEach(() => {
-  console.error.mockRestore();
+  (console.error as jest.Mock).mockRestore();
 });
 
 const TestComponent = (): JSX.Element => {
@@ -62,7 +63,6 @@ const renderTestComponent = async (
 
 describe('useFirebaseAuth', () => {
   it('returns the user from the FirebaseAuthContext', async () => {
-    const user = { uid: '1234' };
     await renderTestComponent(user);
     const text = screen.getByText('User is logged in');
     expect(text).toBeInTheDocument();
@@ -71,8 +71,13 @@ describe('useFirebaseAuth', () => {
   it('throws an error when used outside a FirebaseAuthProvider', () => {
     try {
       renderHook(() => useFirebaseAuth());
-    } catch (error) {
-      expect(error.message).toMatch(
+    } catch (error: unknown) {
+      const errorMessage =
+        typeof error === 'object' && error !== null && 'message' in error
+          ? (error as { message: string }).message
+          : 'unknown error';
+
+      expect(errorMessage).toMatch(
         /useFirebaseAuth must be used within a FirebaseAuthProvider/
       );
     }
