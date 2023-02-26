@@ -26,3 +26,6 @@ dist-ssr
 # Firebase
 firebase
 firestore.rules
+
+# Test coverage
+coverage

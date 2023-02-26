@@ -27,3 +27,6 @@ dist-ssr
 vite.config.ts
 vite-env.d.ts
 jest-setup.ts
+
+# Test coverage files
+coverage
