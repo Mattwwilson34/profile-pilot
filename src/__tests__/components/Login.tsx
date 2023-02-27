@@ -19,6 +19,12 @@ describe('<Login />', () => {
     expect(h2).toBeInTheDocument();
   });
 
+  it('renders the Logo svg', () => {
+    render(<Login />);
+    const logo = screen.getByTestId('logo');
+    expect(logo).toBeInTheDocument();
+  });
+
   it('renders the login button', () => {
     render(<Login />);
 
@@ -27,7 +33,7 @@ describe('<Login />', () => {
     expect(loginButton).toBeInTheDocument();
   });
 
-  it('calls googleAuthSingInWithRedirect on login button click', () => {
+  it('calls googleAuthSingInWithRedirect when login button is clicked', () => {
     render(<Login />);
 
     const loginButton = screen.getByRole('button', { name: 'Login' });
