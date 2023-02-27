@@ -41,7 +41,7 @@ describe('<Root />', () => {
   it('renders login button if user is null', async () => {
     (useFirebaseAuth as jest.Mock).mockReturnValue(null);
     await renderRootRoute();
-    const text = screen.getByText('Login Please');
+    const text = screen.getByText('Login');
     expect(text).toBeInTheDocument();
   });
 });
