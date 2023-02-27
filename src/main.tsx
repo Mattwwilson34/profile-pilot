@@ -7,7 +7,6 @@ import './index.css';
 import Root from './routes/Root';
 import { FirebaseAuthProvider } from './context/FireBaseAuthContext';
 import { appTheme } from './style/app-theme';
-console.log(appTheme);
 
 const router = createBrowserRouter([
   {
