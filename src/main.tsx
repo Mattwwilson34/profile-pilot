@@ -18,14 +18,12 @@ const router = createBrowserRouter([
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <ThemeProvider theme={appTheme}>
-      <CssBaseline enableColorScheme />
-      <QueryClientProvider client={queryClient}>
-        <FirebaseAuthProvider>
-          <RouterProvider router={router} />
-        </FirebaseAuthProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
-  </React.StrictMode>
+  <ThemeProvider theme={appTheme}>
+    <CssBaseline enableColorScheme />
+    <QueryClientProvider client={queryClient}>
+      <FirebaseAuthProvider>
+        <RouterProvider router={router} />
+      </FirebaseAuthProvider>
+    </QueryClientProvider>
+  </ThemeProvider>
 );
