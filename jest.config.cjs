@@ -3,6 +3,7 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
   moduleNameMapper: {
     '\\.(css|less)$': 'identity-obj-proxy',
+    '\\.svg$': '<rootDir>/src/__mocks__/fileMock.ts',
   },
   testPathIgnorePatterns: ['/node_modules/', '/mockData/'],
   collectCoverage: true,

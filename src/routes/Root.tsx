@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button, CircularProgress } from '@mui/material';
-import { googleAuthSignInWithRedirect } from '../firebase/firebase-auth';
+import { CircularProgress } from '@mui/material';
 import useFirebaseAuth from '../hooks/useFirebaseAuth';
 import TopNav from '../features/top-nav';
+import Login from '../features/login';
 
 const Root = (): JSX.Element => {
   const user = useFirebaseAuth();
@@ -21,9 +21,7 @@ const Root = (): JSX.Element => {
     return (
       <>
         <TopNav user={user} />
-        <Button variant='contained' onClick={googleAuthSignInWithRedirect}>
-          Login Please
-        </Button>
+        <Login />
       </>
     );
   }

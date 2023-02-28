@@ -30,3 +30,6 @@ jest-setup.ts
 
 # Test coverage files
 coverage
+
+# Jest SVG transform assist module
+svg.d.ts
