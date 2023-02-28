@@ -24,7 +24,6 @@ dist-ssr
 *.sw?
 
 # Config files
-vite.config.ts
 vite-env.d.ts
 jest-setup.ts
 
