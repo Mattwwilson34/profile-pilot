@@ -1,6 +1,9 @@
-export interface SurveryQuestion {
-  question: string;
-  answer: string;
+export interface SurveryData {
+  connections: string;
+  goals: string;
+  hobbies: string;
+  interests: string;
+  skills: string;
 }
 
 export interface User {
@@ -11,5 +14,5 @@ export interface User {
   phoneNumber: string | null;
   photoURL: string | null;
   username?: string | null;
-  surveyQuestions?: SurveryQuestion[];
+  surveyData?: SurveryData | null;
 }
