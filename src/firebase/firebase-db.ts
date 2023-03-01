@@ -4,12 +4,14 @@ import {
   doc,
   collection,
   getDoc,
-  addDoc,
   query,
   getDocs,
   where,
+  updateDoc,
+  setDoc,
 } from 'firebase/firestore';
-import type { User } from '../types/User';
+import { auth } from './firebase-auth';
+import type { User, SurveryData } from '../types/User';
 import type { DocumentData } from 'firebase/firestore';
 
 const db = getFirestore(app);
@@ -45,8 +47,11 @@ const addNewUserToFirestore = async (user: User): Promise<boolean> => {
       console.log('user already exists in database');
       return false;
     } else {
-      const collectionRef = collection(db, 'users');
-      await addDoc(collectionRef, user);
+      const userUid = auth?.currentUser?.uid;
+      if (typeof userUid !== 'string') {
+        throw Error('user.uid must be of type string');
+      }
+      await setDoc(doc(db, 'users', userUid), user);
       console.log('Document added: ', user);
       return true;
     }
@@ -78,8 +83,25 @@ const getUserFromFirestoreById = async (
   }
 };
 
+const updateUserSurveyQuestions = async (
+  surveyData: SurveryData
+): Promise<void> => {
+  const docId = auth?.currentUser?.uid;
+  if (typeof docId !== 'string') {
+    throw Error('docId must be of type string');
+  }
+  try {
+    const userRef = doc(db, 'users', docId);
+    await updateDoc(userRef, { surveyData });
+    console.log('Successfully added survey data to:', docId);
+  } catch (error) {
+    console.log('Error adding survery data', error);
+  }
+};
+
 export {
   userExistsInFirestore,
   addNewUserToFirestore,
   getUserFromFirestoreById,
+  updateUserSurveyQuestions,
 };
