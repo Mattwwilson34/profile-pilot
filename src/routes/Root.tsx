@@ -9,12 +9,15 @@ const Root = (): JSX.Element => {
   const navigate = useNavigate();
   const localUserJson = localStorage.getItem('profile-pilot');
   const localUser = JSON.parse(localUserJson ?? 'null');
+  const homeURL = 'https://profile-pilot.web.app/';
+  const localHostURL = 'http://localhost:5173/';
+  const currURL = window.location.href;
 
   useEffect(() => {
     const surveyDataPresent = localUser?.surveyData;
     if (surveyDataPresent == null) {
       navigate('/survey');
-    } else if (typeof surveyDataPresent === 'object') {
+    } else if (currURL === homeURL || currURL === localHostURL) {
       navigate(`/profile/${localUser.docId as string}`);
     }
   }, []);

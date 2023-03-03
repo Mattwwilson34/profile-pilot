@@ -11,7 +11,7 @@ import {
   setDoc,
 } from 'firebase/firestore';
 import { auth } from './firebase-auth';
-import type { User, SurveryData } from '../types/User';
+import type { User, SurveyData } from '../types/User';
 import type { DocumentData } from 'firebase/firestore';
 
 const db = getFirestore(app);
@@ -44,7 +44,6 @@ const addNewUserToFirestore = async (user: User): Promise<boolean> => {
     }
     const { exists, data } = await userExistsInFirestore(user?.username);
     if (exists) {
-      console.log('user already exists in database');
       localStorage.setItem('profile-pilot', JSON.stringify(data));
       return false;
     } else {
@@ -53,7 +52,6 @@ const addNewUserToFirestore = async (user: User): Promise<boolean> => {
         throw Error('user.uid must be of type string');
       }
       await setDoc(doc(db, 'users', userUid), user);
-      console.log('Document added: ', user);
       return true;
     }
   } catch (error) {
@@ -85,7 +83,7 @@ const getUserFromFirestoreById = async (
 };
 
 const updateUserSurveyQuestions = async (
-  surveyData: SurveryData
+  surveyData: SurveyData
 ): Promise<void> => {
   const docId = auth?.currentUser?.uid;
   if (typeof docId !== 'string') {
