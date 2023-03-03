@@ -19,8 +19,11 @@ const router = createBrowserRouter([
         element: <Survery />,
       },
       {
-        path: '/profile',
-        element: <div>Profile Route</div>,
+        path: '/profile/:profileId',
+        element: <Profile />,
+        loader: async ({ params }) => {
+          return await getUserFromFirestoreById(params.profileId as string);
+        },
       },
     ],
   },
