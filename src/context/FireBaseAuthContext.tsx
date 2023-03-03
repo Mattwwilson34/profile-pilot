@@ -19,7 +19,7 @@ const formatUserData = (googleUser: GoogleUser): User => {
   const [userData] = providerData;
   const user: User = {
     ...userData,
-    username: userData.email,
+    username: userData.email ?? '',
     docId: googleUser.uid,
   };
   return user;
@@ -35,8 +35,8 @@ const setUserInLocalStorage = (user: User): void => {
 const FirebaseAuthProvider: React.FC<FirebaseAuthProviderProps> = ({
   children,
 }: FirebaseAuthProviderProps): JSX.Element => {
-  const [user, setUser] = useState<User | null>(null);
   const [pending, setPending] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(
@@ -50,6 +50,7 @@ const FirebaseAuthProvider: React.FC<FirebaseAuthProviderProps> = ({
           await addNewUserToFirestore(formatedUser);
           setUserInLocalStorage(formatedUser);
           setUser(formatedUser);
+
           setPending(false);
         })();
       }
