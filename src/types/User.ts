@@ -15,4 +15,5 @@ export interface User {
   photoURL: string | null;
   username?: string | null;
   surveyData?: SurveryData | null;
+  docId: string | null;
 }
