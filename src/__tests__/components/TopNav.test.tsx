@@ -1,23 +1,39 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, type RenderResult, screen } from '@testing-library/react';
 import TopNav from '../../features/top-nav';
-import { user } from '../mockData/mockUser';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+const renderTopNav = (isLoggedIn: boolean | undefined): RenderResult => {
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <TopNav userAuthorized={isLoggedIn} />
+    </QueryClientProvider>
+  );
+};
 
 describe('<TopNav />', () => {
   it('renders the component', () => {
-    render(<TopNav user={user} />);
+    renderTopNav(true);
     const text = screen.getByText('Profile Pilot');
     expect(text).toBeInTheDocument();
   });
 
   it('renders logout button when user is logged in', () => {
-    render(<TopNav user={user} />);
+    renderTopNav(true);
     const text = screen.getByText('Logout');
     expect(text).toBeInTheDocument();
   });
 
   it('renders without logout button when no user logged in', () => {
-    render(<TopNav user={null} />);
+    renderTopNav(false);
     const logoutButton = screen.queryByText('Logout');
     expect(logoutButton).toBeNull();
   });

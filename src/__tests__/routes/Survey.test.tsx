@@ -2,12 +2,23 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { render, type RenderResult, screen } from '@testing-library/react';
 import Survey from '../../routes/Survey';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const renderSurvey = (): RenderResult => {
   return render(
-    <BrowserRouter>
-      <Survey />
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Survey />
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 };
 

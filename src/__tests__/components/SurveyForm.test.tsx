@@ -8,10 +8,20 @@ import {
 import SurveyForm from '../../features/survey-form';
 import { BrowserRouter } from 'react-router-dom';
 import { updateUserSurveyQuestions } from '../../firebase/firebase-db';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 jest.mock('../../firebase/firebase-db', () => ({
   updateUserSurveyQuestions: jest.fn(),
 }));
+
 const mockedUsedNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({
@@ -21,9 +31,11 @@ jest.mock('react-router-dom', () => ({
 
 const renderSurveyForm = (): RenderResult => {
   return render(
-    <BrowserRouter>
-      <SurveyForm />
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <SurveyForm />
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 };
 
