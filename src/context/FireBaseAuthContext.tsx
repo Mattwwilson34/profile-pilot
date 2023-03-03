@@ -1,59 +1,45 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { auth } from '../firebase/firebase-auth';
-import {
-  addNewUserToFirestore,
-  userExistsInFirestore,
-} from '../firebase/firebase-db';
+import { addNewUserToFirestore } from '../firebase/firebase-db';
 import type { User } from '../types/User';
+import type { User as GoogleUser } from 'firebase/auth';
 
 interface ContextState {
-  user: User | null | undefined;
+  user: User | null;
 }
 
 type FirebaseAuthProviderProps = {
-  value?: User | undefined;
   children: React.ReactNode;
 } & React.HTMLAttributes<HTMLElement>;
 
-const FirebaseAuthContext = createContext<ContextState | undefined>(undefined);
+const FirebaseAuthContext = createContext<ContextState | null>(null);
 
+const formatUserData = (googleUser: GoogleUser): User => {
+  const { providerData } = googleUser;
+  const [userData] = providerData;
+  const user: User = {
+    ...userData,
+    username: userData.email,
+    docId: googleUser.uid,
+  };
+  return user;
+};
 const FirebaseAuthProvider: React.FC<FirebaseAuthProviderProps> = ({
-  value,
   children,
 }: FirebaseAuthProviderProps): JSX.Element => {
-  const [user, setUser] = useState<User | null | undefined>(value);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((googleUser) => {
-      // user not logged in
-      if (googleUser === null) {
-        setUser(null);
-      }
-      // google login success
-      else {
+    const unsubscribe = auth.onAuthStateChanged(
+      (googleUser: GoogleUser | null) => {
         void (async () => {
-          const { providerData } = googleUser;
-          const [userData] = providerData;
-          const user: User = { ...userData, username: userData.email };
-
-          // check if user exists in database
-          if (typeof user?.email !== 'string') {
-            console.error('user.email must be of type string');
-            return false;
-          }
-          // user exists set user state with firestore user data
-          const { exists, data } = await userExistsInFirestore(user.email);
-          if (exists) {
-            setUser(data);
-          }
-          // user doesn't exist add user to firestore and set user state
-          else {
-            await addNewUserToFirestore(user);
-            setUser(user);
-          }
+          const formatedUser = formatUserData(googleUser);
+          await addNewUserToFirestore(formatedUser);
+          setUserInLocalStorage(formatedUser);
+          setUser(formatedUser);
         })();
       }
-    });
+    );
     return unsubscribe;
   }, []);
 
