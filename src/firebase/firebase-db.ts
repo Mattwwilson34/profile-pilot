@@ -42,9 +42,10 @@ const addNewUserToFirestore = async (user: User): Promise<boolean> => {
     if (typeof user?.username !== 'string') {
       throw Error('user.username must be of type string');
     }
-    const { exists } = await userExistsInFirestore(user?.username);
+    const { exists, data } = await userExistsInFirestore(user?.username);
     if (exists) {
       console.log('user already exists in database');
+      localStorage.setItem('profile-pilot', JSON.stringify(data));
       return false;
     } else {
       const userUid = auth?.currentUser?.uid;
@@ -63,7 +64,7 @@ const addNewUserToFirestore = async (user: User): Promise<boolean> => {
 
 const getUserFromFirestoreById = async (
   userId: string
-): Promise<DocumentData | boolean> => {
+): Promise<DocumentData | null> => {
   try {
     const documentRef = doc(collection(db, 'users'), userId);
     const documentSnapshot = await getDoc(documentRef);
@@ -75,11 +76,11 @@ const getUserFromFirestoreById = async (
     } else {
       // Document does not exist
       console.log('Document not found.');
-      return false;
+      return null;
     }
   } catch (error) {
     console.log(error);
-    return false;
+    return null;
   }
 };
 
@@ -93,6 +94,13 @@ const updateUserSurveyQuestions = async (
   try {
     const userRef = doc(db, 'users', docId);
     await updateDoc(userRef, { surveyData });
+    const userJson = localStorage.getItem('profile-pilot');
+    if (typeof userJson !== 'string') {
+      throw Error('userJson must be of type string');
+    }
+    const user = JSON.parse(userJson);
+    user.surveyData = surveyData;
+    localStorage.setItem('profile-pilot', JSON.stringify(user));
     console.log('Successfully added survey data to:', docId);
   } catch (error) {
     console.log('Error adding survery data', error);
