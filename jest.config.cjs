@@ -25,5 +25,6 @@ module.exports = {
     '/firebase/',
     '/__tests__/mockData/',
     '/types/',
+    '/style/',
   ],
 };
