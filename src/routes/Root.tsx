@@ -14,8 +14,6 @@ const Root = (): JSX.Element => {
     const surveyDataPresent = localUser?.surveyData;
     if (surveyDataPresent == null) {
       navigate('/survey');
-    } else if (typeof surveyDataPresent === 'object') {
-      navigate(`/profile/${localUser.docId as string}`);
     }
   }, []);
 
