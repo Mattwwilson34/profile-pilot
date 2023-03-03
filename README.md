@@ -4,6 +4,7 @@ An application that allows users to generate public URLs that they can share wit
 display a username, profile photo, and answers to a questionaire that user filled out on signup.
 
 # Table of Contents
+
 - [Profile Pilot](#profile-pilot)
   - [Features](#features)
   - [Demonstration](#demonstration)
@@ -95,9 +96,9 @@ npm run format
 
 - **_ESLing/Prettier_**: My formatting and style tools of choice will be ESLint and Prettier. They are very popular tools with great documention and
   will help me to write cleaner, more consistent, and more maintainable code.
-  
+
   ## Technical problems and Known Applciation Bugs
-  
+
   While building the project, I encountered some technical difficulties, particularly with Google Authentication and providing that data via a React context provider. I spent a significant amount of time building out the AuthContextProvider component to manage my application's user authorization state, ensuring that it had 100% test coverage. However, I ran into issues when I needed to keep my users' state up-to-date with the Firebase Firestore DB.
 
   The Google auth listener recommended by Firebase documentation provides only a static user object that is not coupled with the application's Firestore. Therefore, when I saved a user's survey data to the user document in Firestore, the Google auth listener was not triggered, and I had no access to this updated user information in the application.
@@ -107,30 +108,29 @@ npm run format
   After trying to refactor the authentication context without success, I opted to perform a complete refactor of the root route. Instead of using the Firebase Firestore database, I chose to use local storage as it is a synchronous operation. By adding local storage functionality to the application, I was able to resolve the bug that had prevented me from using react query to retrieve user information from the Firestore database.
 
   I believe that the bug was likely caused by my own error in implementing the auth context, so I plan to review best practices for Firebase auth context in future applications.
-  
-  ***Bugs:***
-  
-  ***Browser***
-  
-    - The Firebase GoogleAuth signinWithRedirect method has an existing bug with the Safari web browser. Unfortunately, this means that the user is not persisted in the Firebase auth provider, and I am unable to persist a user's login state as the application is currently written.
-      - To resolve this issue, one solution would be to refactor the application to use the signinWithPopup method, which the Google documentation suggests as an alternative until the bug is fixed on their end.
-      
-   ***URL***
-   
-    - Currently, when the application is loaded without being logged in, the URL that the user is taken to is /survey. Although the correct component and functionality are present, the URL is not correct.
 
-  
+  **_Bugs:_**
+
+  **_Browser_**
+
+  - The Firebase GoogleAuth signinWithRedirect method has an existing bug with the Safari web browser. Unfortunately, this means that the user is not persisted in the Firebase auth provider, and I am unable to persist a user's login state as the application is currently written.
+    - To resolve this issue, one solution would be to refactor the application to use the signinWithPopup method, which the Google documentation suggests as an alternative until the bug is fixed on their end.
+
+  **_URL_**
+
+  - Currently, when the application is loaded without being logged in, the URL that the user is taken to is /survey. Although the correct component and functionality are present, the URL is not correct.
+
   ## Successes and Reflection
-  
-  ***Successes:***
-  
+
+  **_Successes:_**
+
   - [x] Implemented continuous integration and deployment pipelines to cover the entire development life cycle of my application.
   - [x] Enhanced my unit testing proficiency using the Jest testing framework, particularly in mocking external dependencies such as React Query and React Context Providers.
   - [x] Applyed TypeScript methodologies throughout the life cycle of my application to enhance my TypeScript skills.
-  - [x] Leveraged continuous integration practices for code formatting with Prettier, enforcing code style with ESLint, and achieving test coverage using       the Jest testing framework to safeguard the main branch of my application.
-  
-  ***Reflection:***
-  
+  - [x] Leveraged continuous integration practices for code formatting with Prettier, enforcing code style with ESLint, and achieving test coverage using the Jest testing framework to safeguard the main branch of my application.
+
+  **_Reflection:_**
+
   Overall, this project proved to be an excellent learning experience for me. It helped me to significantly improve my confidence and skill set in application testing, and provided me with valuable insights into the challenges of ensuring comprehensive test coverage before committing to a repository. Additionally, while encountering some off-context issues, I was able to delve deeper into how React handles these issues and gained a lot of knowledge in this area. However, there is still much more to learn in this field.
 
   Moving forward, I plan to seek guidance from an experienced React developer, particularly one who has more extensive experience with context providers and user authentication in an industrial setting. This will enable me to develop more scalable applications and continue to expand my knowledge in this area.
