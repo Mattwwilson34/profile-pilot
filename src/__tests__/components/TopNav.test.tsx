@@ -1,7 +1,17 @@
 import React from 'react';
-import { render, type RenderResult, screen } from '@testing-library/react';
+import {
+  render,
+  type RenderResult,
+  screen,
+  fireEvent,
+} from '@testing-library/react';
 import TopNav from '../../features/top-nav';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { signOutOfFirebase } from '../../firebase/firebase-auth';
+
+jest.mock('../../firebase/firebase-auth', () => ({
+  signOutOfFirebase: jest.fn(),
+}));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,8 +38,19 @@ describe('<TopNav />', () => {
 
   it('renders logout button when user is logged in', () => {
     renderTopNav(true);
-    const text = screen.getByText('Logout');
-    expect(text).toBeInTheDocument();
+    const logoutButton = screen.getByText('Logout');
+    expect(logoutButton).toBeInTheDocument();
+
+    const invalidateQueriesSpy = jest.spyOn(queryClient, 'invalidateQueries');
+
+    fireEvent.click(logoutButton);
+    expect(signOutOfFirebase).toHaveBeenCalledTimes(1);
+    expect(queryClient.invalidateQueries).toHaveBeenCalledTimes(1);
+    expect(queryClient.invalidateQueries).toHaveBeenCalledWith({
+      queryKey: ['user'],
+    });
+
+    invalidateQueriesSpy.mockRestore();
   });
 
   it('renders without logout button when no user logged in', () => {
