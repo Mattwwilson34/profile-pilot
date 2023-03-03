@@ -17,6 +17,7 @@ const googleAuthSignInWithRedirect = (): void => {
 const signOutOfFirebase = (): void => {
   void (async () => {
     try {
+      localStorage.removeItem('profile-pilot');
       await auth.signOut();
     } catch (error) {
       console.log(error);
