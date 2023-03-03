@@ -1,47 +1,64 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { act, render, screen } from '@testing-library/react';
+import { act, render, renderHook, waitFor } from '@testing-library/react';
 import Root from '../../routes/Root';
-import { FirebaseAuthProvider } from '../../context/FireBaseAuthContext';
-import type { User } from '../../types/User';
-import { user } from '../mockData/mockUser';
-import useFirebaseAuth from '../../hooks/useFirebaseAuth';
+import { useQuery, QueryClient, QueryClientProvider } from 'react-query';
+import { getUserFromFirestoreById } from '../../firebase/firebase-db';
 
-jest.mock('../../hooks/useFirebaseAuth', () => jest.fn());
+jest.mock('../../firebase/firebase-db');
 
-const renderRootRoute = async (
-  user: User | undefined = undefined
-): Promise<void> => {
+const mockedUsedNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockedUsedNavigate,
+}));
+
+const renderRootRoute = async (): Promise<void> => {
+  const queryClient = new QueryClient();
   await act(async () => {
     render(
-      <FirebaseAuthProvider value={user}>
+      <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Root />
         </BrowserRouter>
-      </FirebaseAuthProvider>
+      </QueryClientProvider>
     );
   });
 };
 
 describe('<Root />', () => {
-  it('renders component when user is not null or undefined', async () => {
-    (useFirebaseAuth as jest.Mock).mockReturnValue(user);
-    await renderRootRoute();
-    const text = screen.getByText('Profile Pilot');
-    expect(text).toBeInTheDocument();
-  });
+  it('render login page if user is not logged in', async () => {
+    const queryClient = new QueryClient();
+    const wrapper = ({
+      children,
+    }: {
+      children: React.ReactNode;
+    }): JSX.Element => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
 
-  it('renders loading message if user is undefined', async () => {
-    (useFirebaseAuth as jest.Mock).mockReturnValue(undefined);
-    await renderRootRoute();
-    const text = screen.getByText('Loading user info');
-    expect(text).toBeInTheDocument();
-  });
+    const user = {
+      email: 'test@test.com',
+      surveyData: { true: true },
+      docId: '1',
+    };
+    (getUserFromFirestoreById as jest.Mock).mockResolvedValue(user);
+    localStorage.setItem('profile-pilot', JSON.stringify(user));
+    const { result } = renderHook(
+      () =>
+        useQuery(
+          'user',
+          async () => await getUserFromFirestoreById(user.docId)
+        ),
+      { wrapper }
+    );
 
-  it('renders login button if user is null', async () => {
-    (useFirebaseAuth as jest.Mock).mockReturnValue(null);
     await renderRootRoute();
-    const text = screen.getByText('Login');
-    expect(text).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+      expect(mockedUsedNavigate).toHaveBeenCalledWith(`/profile/${user.docId}`);
+    });
   });
 });
