@@ -30,7 +30,7 @@ const Login = (): JSX.Element => {
       <Typography variant='h5' component='h2'>
         {slogan}
       </Typography>
-      <Image src={Logo} data-testid='logo' />
+      <Image src={Logo} width={200} data-testid='logo' />
       <Button variant='contained' onClick={googleAuthSignInWithRedirect}>
         <GoogleIcon sx={buttonStyles} />
         {loginButtonTitle}
