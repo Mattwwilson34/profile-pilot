@@ -8,6 +8,8 @@ import Root from './routes/Root';
 import { FirebaseAuthProvider } from './context/FireBaseAuthContext';
 import { appTheme } from './style/app-theme';
 import Survery from './routes/Survey';
+import Profile from './routes/Profile';
+import { getUserFromFirestoreById } from './firebase/firebase-db';
 
 const router = createBrowserRouter([
   {
@@ -15,7 +17,7 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       {
-        path: '/survery',
+        path: '/survey',
         element: <Survery />,
       },
       {
