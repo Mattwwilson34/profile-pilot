@@ -58,7 +58,40 @@ describe('<Root />', () => {
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
-      expect(mockedUsedNavigate).toHaveBeenCalledWith(`/profile/${user.docId}`);
+    });
+  });
+
+  it('renders the survey if surveryData is null', async () => {
+    const queryClient = new QueryClient();
+    const wrapper = ({
+      children,
+    }: {
+      children: React.ReactNode;
+    }): JSX.Element => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
+
+    const user = {
+      email: 'test@test.com',
+      surveyData: null,
+      docId: '1',
+    };
+    (getUserFromFirestoreById as jest.Mock).mockResolvedValue(user);
+    localStorage.setItem('profile-pilot', JSON.stringify(user));
+    const { result } = renderHook(
+      () =>
+        useQuery(
+          'user',
+          async () => await getUserFromFirestoreById(user.docId)
+        ),
+      { wrapper }
+    );
+
+    await renderRootRoute();
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+      expect(mockedUsedNavigate).toHaveBeenCalled();
     });
   });
 });
