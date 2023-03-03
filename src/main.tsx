@@ -1,6 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  redirect,
+  RouterProvider,
+} from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider } from '@mui/material';
 import './index.css';
@@ -10,6 +14,7 @@ import { appTheme } from './style/app-theme';
 import Survery from './routes/Survey';
 import Profile from './routes/Profile';
 import { getUserFromFirestoreById } from './firebase/firebase-db';
+import NotFound from './error/NotFound';
 
 const router = createBrowserRouter([
   {
@@ -24,10 +29,20 @@ const router = createBrowserRouter([
         path: '/profile/:profileId',
         element: <Profile />,
         loader: async ({ params }) => {
-          return await getUserFromFirestoreById(params.profileId as string);
+          const userData = await getUserFromFirestoreById(
+            params.profileId as string
+          );
+          if (userData === null) {
+            return redirect('*');
+          }
+          return userData;
         },
       },
     ],
+  },
+  {
+    path: '*',
+    element: <NotFound />,
   },
 ]);
 
