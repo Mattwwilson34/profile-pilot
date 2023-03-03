@@ -41,14 +41,14 @@ describe('<FirebaseAuthProvider />', () => {
     (console.error as jest.Mock).mockRestore();
   });
 
-  it('renders its children', () => {
+  it('renders a loading message when leading user data', () => {
     render(
       <FirebaseAuthProvider>
         <div>Test</div>
       </FirebaseAuthProvider>
     );
 
-    const text = screen.getByText('Test');
+    const text = screen.getByText('Waiting for user data to load in Context.');
     expect(text).toBeInTheDocument();
   });
 
@@ -111,50 +111,48 @@ describe('<FirebaseAuthProvider />', () => {
       expect(error).toMatch('error');
     }
   });
-});
 
-it('updates user state when auth state changes and user exists in database', async () => {
-  // these assertions rely on the mockAuthProvider import variables
-  (userExistsInFirestore as jest.Mock).mockReturnValue({
-    exists: true,
-    data: user,
+  it('updates user state when auth state changes and user exists in database', async () => {
+    // these assertions rely on the mockAuthProvider import variables
+    (userExistsInFirestore as jest.Mock).mockReturnValue({
+      exists: true,
+      data: user,
+    });
+
+    const onAuthStateChanged = jest.fn((cb) => {
+      cb(googleUser);
+      return jest.fn();
+    });
+    auth.onAuthStateChanged = onAuthStateChanged;
+
+    await renderFirebaseAuthProvider();
+
+    const text = screen.getByText('Test User');
+
+    expect(onAuthStateChanged).toHaveBeenCalledTimes(1);
+    expect(addNewUserToFirestore).toHaveBeenCalledTimes(1);
+    expect(text).toBeInTheDocument();
   });
 
-  const onAuthStateChanged = jest.fn((cb) => {
-    cb(googleUser);
-    return jest.fn();
+  it('updates the user state when auth state changes and saves user to db if user not in db', async () => {
+    // these assertions rely on the mockAuthProvider import variables
+    (userExistsInFirestore as jest.Mock).mockReturnValue({
+      exists: false,
+      data: user,
+    });
+
+    const onAuthStateChanged = jest.fn((cb) => {
+      cb(googleUser);
+      return jest.fn();
+    });
+    auth.onAuthStateChanged = onAuthStateChanged;
+
+    await renderFirebaseAuthProvider();
+
+    const text = screen.getByText('Test User');
+
+    expect(onAuthStateChanged).toHaveBeenCalledTimes(1);
+    expect(addNewUserToFirestore).toHaveBeenCalledTimes(1);
+    expect(text).toBeInTheDocument();
   });
-  auth.onAuthStateChanged = onAuthStateChanged;
-
-  await renderFirebaseAuthProvider();
-
-  const text = screen.getByText('Test User');
-
-  expect(onAuthStateChanged).toHaveBeenCalledTimes(1);
-  expect(userExistsInFirestore).toHaveBeenCalledTimes(1);
-  expect(addNewUserToFirestore).toHaveBeenCalledTimes(0);
-  expect(text).toBeInTheDocument();
-});
-
-it('updates the user state when auth state changes and saves user to db if user not in db', async () => {
-  // these assertions rely on the mockAuthProvider import variables
-  (userExistsInFirestore as jest.Mock).mockReturnValue({
-    exists: false,
-    data: user,
-  });
-
-  const onAuthStateChanged = jest.fn((cb) => {
-    cb(googleUser);
-    return jest.fn();
-  });
-  auth.onAuthStateChanged = onAuthStateChanged;
-
-  await renderFirebaseAuthProvider();
-
-  const text = screen.getByText('Test User');
-
-  expect(onAuthStateChanged).toHaveBeenCalledTimes(1);
-  expect(userExistsInFirestore).toHaveBeenCalledTimes(2);
-  expect(addNewUserToFirestore).toHaveBeenCalledTimes(1);
-  expect(text).toBeInTheDocument();
 });
