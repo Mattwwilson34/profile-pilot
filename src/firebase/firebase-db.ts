@@ -11,7 +11,7 @@ import {
   setDoc,
 } from 'firebase/firestore';
 import { auth } from './firebase-auth';
-import type { User, SurveryData } from '../types/User';
+import type { User, SurveyData } from '../types/User';
 import type { DocumentData } from 'firebase/firestore';
 
 const db = getFirestore(app);
@@ -85,7 +85,7 @@ const getUserFromFirestoreById = async (
 };
 
 const updateUserSurveyQuestions = async (
-  surveyData: SurveryData
+  surveyData: SurveyData
 ): Promise<void> => {
   const docId = auth?.currentUser?.uid;
   if (typeof docId !== 'string') {

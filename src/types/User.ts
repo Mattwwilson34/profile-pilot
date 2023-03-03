@@ -1,9 +1,10 @@
-export interface SurveryData {
+export interface SurveyData {
   connections: string;
   goals: string;
   hobbies: string;
   interests: string;
   skills: string;
+  [key: string]: string;
 }
 
 export interface User {
@@ -14,6 +15,6 @@ export interface User {
   phoneNumber: string | null;
   photoURL: string | null;
   username?: string | null;
-  surveyData?: SurveryData | null;
+  surveyData?: SurveyData | null;
   docId: string | null;
 }
