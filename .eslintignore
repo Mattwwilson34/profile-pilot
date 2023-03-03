@@ -33,3 +33,4 @@ coverage
 
 # Jest SVG transform assist module
 svg.d.ts
+setupTests.ts
