@@ -8,10 +8,10 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
 interface TopNavProps {
-  user: User | null | undefined;
+  userAuthorized: boolean | undefined | null;
 }
 
-const TopNav = ({ user }: TopNavProps): JSX.Element => {
+const TopNav = ({ userAuthorized }: TopNavProps): JSX.Element => {
   return (
     <Box sx={{ flexGrow: 1, marginBottom: 2 }}>
       <AppBar position='static'>
@@ -19,8 +19,9 @@ const TopNav = ({ user }: TopNavProps): JSX.Element => {
           <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
             Profile Pilot
           </Typography>
-          {user == null ? null : (
             <Button color='inherit' onClick={signOutOfFirebase}>
+          {userAuthorized === false ? null : (
+            <Button color='inherit' onClick={handleLogout}>
               Logout
             </Button>
           )}
