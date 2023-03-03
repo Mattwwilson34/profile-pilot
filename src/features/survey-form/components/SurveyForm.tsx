@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { Button, TextField, Box } from '@mui/material';
 import { updateUserSurveyQuestions } from '../../../firebase/firebase-db';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from 'react-query';
+import { auth } from '../../../firebase/firebase-auth';
 
 const formContainerStyles = {
   padding: 1,
 };
 
 const SurveryForm = (): JSX.Element => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [formState, setFormState] = useState({
     interests: '',
@@ -31,7 +34,8 @@ const SurveryForm = (): JSX.Element => {
     event.preventDefault();
     void (async () => {
       await updateUserSurveyQuestions(formState);
-      navigate('/');
+      await queryClient.invalidateQueries({ queryKey: ['user'] });
+      navigate(`/profile/${auth?.currentUser?.uid as string}`);
     })();
   };
 
