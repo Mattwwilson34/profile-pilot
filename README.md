@@ -1,7 +1,6 @@
 # Profile Pilot
 
-An application that allows users to generate public URLs that they can share with friends. The shared URL's will take users to that profile page which will
-display a username, profile photo, and answers to a questionaire that user filled out on signup.
+An application that allows users to create personalized sharable profile pages. 
 
 # Table of Contents
 
@@ -15,9 +14,10 @@ display a username, profile photo, and answers to a questionaire that user fille
 
 ## Features
 
-- [x] Allow users to login with a third-party service like Google, Facebook, Twitter, etc.
-- [x] Presents user with questionaire of at least 3 questions at signup. Questions can be anything the developer would like.
-- [x] Allow users to share a public URL that displays the user's username, profile photo, and their answers to the questionaire:
+- [x] Login/out with third-party service like Google, Facebook, Twitter, etc.
+- [x] New users prompted with questions that will added to their custom profile.
+- [x] Each user has a unique profile URL that displayes their profile picture, name, and answers to registration questions.
+- [x] Users can share thier URLs and visit other users profile pages
 
 ## Demonstration
 
